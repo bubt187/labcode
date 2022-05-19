@@ -1,0 +1,33 @@
+#define ir 3
+#define buzz 12
+#define pot A1
+#define led 6
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  pinMode(ir, INPUT);
+  pinMode(buzz, OUTPUT);
+  pinMode(pot, INPUT);
+  pinMode(led, OUTPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  bool var = digitalRead(ir);
+  Serial.println(var);
+  if (var == 0)
+  {
+    digitalWrite(buzz, HIGH);
+  }
+  if (var == 1)
+  {
+    digitalWrite(buzz, LOW);
+  }
+  int value = analogRead(pot);
+  int y = map (value , 0, 1023, 0, 255);
+  Serial.println(value);
+  analogWrite(led, y);
+  delay(500);
+
+}
