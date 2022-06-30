@@ -1,0 +1,82 @@
+import psycopg2
+from psycopg2 import Error
+
+try:
+    # Connect to an existing database
+    connection = psycopg2.connect(user="postgres",
+                                  password="123",
+                                  host="localhost",
+                                  port="5432",
+                                  database="firstdb")
+    print("db connection got established!")
+# Print PostgreSQL details
+# Create a cursor to perform database operations
+    #cursor = connection.cursor()
+    print("PostgreSQL server information")
+    print(connection.get_dsn_parameters(), "\n")
+
+
+
+
+
+
+#insert operation 
+
+fHalf = "insert into Std (std-ID, std-Name,Dept, CGPA) Values (%s,%s,%s,%s)"
+sHalf = (187,"Rifat", "cse", 3.60)
+connection.execute(fHalf,sHalf)
+connection.commit()
+
+print("Data Inserted !!!!!!!!!!")
+
+
+
+
+
+dropTable = "drop table if exists range_CSE"
+dropTable = "drop table if exists range_EEE"
+dropTable = "drop table if exists range_ME"
+createTable = "create table if not exists range_CSE"
+createTable = "create table if not exists range_EEE"
+createTable = "create table if not exists range_ME"
+	 
+
+#Dropping 
+connection.execute(dropTable + str(0) + ";")
+connection.execute(dropTable + str(1) + ";")
+connection.execute(dropTable + str(2) + ";")
+
+
+#Creating
+connection.execute(createTable + str(0) + " (id INT, name VARCHAR,department VARCHAR,CGPA FLOAT);" )
+connection.execute(createTable + str(1) + " (id INT, name VARCHAR,department VARCHAR,CGPA FLOAT);" )
+connection.execute(createTable + str(2) + " (id INT, name VARCHAR,department VARCHAR,CGPA FLOAT);" )
+
+
+
+
+    
+insertFirstPartition = """insert into range_CSE select * from students""" + " where department='CSE';"
+connection.execute(insertFirstPartition)
+connection.commit()
+
+
+insertFirstPartition = """insert into range_EEE select * from students""" + " where department='EEE';"
+connection.execute(insertFirstPartition)
+connection.commit()
+
+
+insertFirstPartition = """insert into range_ME select * from students""" + " where department='ME';"connection.execute(insertFirstPartition)
+connection.commit()
+
+
+
+
+except (Exception, Error) as error:
+    print("Error while connecting to PostgreSQL", error)
+finally:
+    if (connection):
+        cursor.close()
+        connection.close()
+        print("PostgreSQL connection is closed")
+
